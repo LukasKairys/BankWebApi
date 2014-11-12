@@ -1,0 +1,7 @@
+packages/*
+WebAPI/bin/*
+WebAPI/obj/*
+WebAPI/degub/*
+WebAPI.Tests/bin/*
+WebAPI.Tests/debug/*
+WebAPI.Tests/obj/*
