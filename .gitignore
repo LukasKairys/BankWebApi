@@ -5,3 +5,5 @@ WebAPI/degub/*
 WebAPI.Tests/bin/*
 WebAPI.Tests/debug/*
 WebAPI.Tests/obj/*
+
+WebAPI\Migrations*/
