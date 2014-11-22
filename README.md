@@ -1,6 +1,6 @@
 BankWebApi
 ==========
-Web Api, done for learning purposes.
+Web Api, done for learning purposes. API Documentation made using swagger. 
 
 Requirements:
 1. Entity framework.
