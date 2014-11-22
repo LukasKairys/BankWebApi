@@ -9,7 +9,7 @@ namespace WebAPI.Repositories
 {
     public interface IBanksRepository
     {
-        IEnumerable<Bank> GetAll();
+        List<Bank> GetAll();
         Bank Get(int id);
         void Delete(int id);
         void Update(Bank updatedBank);
@@ -19,7 +19,7 @@ namespace WebAPI.Repositories
     public class BanksRepository: IBanksRepository
     {
 
-        public IEnumerable<Bank> GetAll()
+        public List<Bank> GetAll()
         {
             List<Bank> banks;
             using (BankContext db = new BankContext())

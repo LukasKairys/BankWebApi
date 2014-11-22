@@ -9,60 +9,104 @@ using System.Net.Http;
 using System.Text;
 using System.Web.Http;
 using Newtonsoft.Json;
+using WebAPI.Handlers.TransactionsHandlers;
+using WebAPI.Handlers.UsersHandlers;
+using WebAPI.Messages.TransactionMessages;
+using WebAPI.Messages.UserMessages;
 using WebAPI.Models;
 using WebAPI.Repositories;
 
 namespace WebAPI.Controllers
 {
-    public class UsersControllers : ApiController
+    public class UsersController : ApiController
     {
 
-        private static BanksRepository _banksRepository;
-
-        public UsersControllers()
+        [HttpGet]
+        public HttpResponseMessage Get(int id)
         {
-            _banksRepository = new BanksRepository();
+            TransactionsRepository transactionsRepository = new TransactionsRepository();
+            transactionsRepository.GetAll();
+
+            GetUserRequest getUserRequest = new GetUserRequest { UserId = id };
+
+            var handler = new GetUserHandler();
+
+            var response = handler.Handle(getUserRequest);
+
+            if (response != null)
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, response);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.InternalServerError);
         }
 
         [HttpGet]
         public HttpResponseMessage Get()
         {
-            var bankList = _banksRepository.GetAll();
+            GetTransactionsAverageHandler testhandler = new GetTransactionsAverageHandler();
+            var a = testhandler.HandleCore(new GetTransactionsAverageRequest { BankId = 3});
 
-            return Request.CreateResponse(HttpStatusCode.OK, bankList);
-        }
 
-        [HttpGet]
-        public HttpResponseMessage Get(int id)
-        {
-            var bank = _banksRepository.Get(id);
+            GetAllUsersRequest getAllUsersRequest = new GetAllUsersRequest();
 
-            return Request.CreateResponse(HttpStatusCode.OK, bank);
+            var handler = new GetAllUsersHandler();
+
+            var response = handler.Handle(getAllUsersRequest);
+
+            if (response != null)
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, response);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.InternalServerError);
         }
 
         [HttpPost]
-        public HttpResponseMessage Post([FromBody]Bank bank)
+        public HttpResponseMessage Post([FromBody]AddUserRequest addUserRequest)
         {
-            _banksRepository.Insert(bank);
+            var handler = new AddUserHandler();
 
-            return Request.CreateResponse(HttpStatusCode.OK, "succes");
+            var response = handler.Handle(addUserRequest);
+
+            if (response != null)
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, response);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.InternalServerError);
+
         }
 
         [HttpPut]
-        public HttpResponseMessage Put([FromBody]Bank bank)
+        public HttpResponseMessage Put([FromBody]UpdateUserRequest updateUserRequest)
         {
-            _banksRepository.Update(bank);
+            var handler = new UpdateUserHandler();
 
-            return Request.CreateResponse(HttpStatusCode.OK, "succes");
+            var response = handler.Handle(updateUserRequest);
+
+            if (response != null)
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, response);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.InternalServerError);
         }
 
 
         [HttpDelete]
-        public HttpResponseMessage Delete(int id)
+        public HttpResponseMessage Delete(DeleteUserRequest deleteUserRequest)
         {
-            _banksRepository.Delete(id);
+            var handler = new DeleteUserHandler();
 
-            return Request.CreateResponse(HttpStatusCode.OK, "succes");
+            var response = handler.Handle(deleteUserRequest);
+
+            if (response != null)
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, response);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.InternalServerError);
         }
     }
 }

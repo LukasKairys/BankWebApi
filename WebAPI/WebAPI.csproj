@@ -50,6 +50,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Swagger.Net">
+      <HintPath>..\packages\Swagger.Net.0.5.5\lib\net40\Swagger.Net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -110,6 +113,9 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.1.2\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
+    <Reference Include="WebActivator">
+      <HintPath>..\packages\WebActivator.1.5.1\lib\net40\WebActivator.dll</HintPath>
+    </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
@@ -134,6 +140,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\SwaggerNet.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\HelpPage\ApiDescriptionExtensions.cs" />
     <Compile Include="Areas\HelpPage\App_Start\HelpPageConfig.cs" />
@@ -163,15 +170,64 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\TransactionsController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\BanksController.cs" />
+    <Compile Include="Dto\TransactionsBanksDto.cs" />
+    <Compile Include="Dto\TransactionsAverageByBankDto.cs" />
+    <Compile Include="Dto\ErrorDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Handlers\BanksHandlers\DeleteBankHandler.cs" />
+    <Compile Include="Handlers\BanksHandlers\UpdateBankHandler.cs" />
+    <Compile Include="Handlers\BanksHandlers\GetAllBanksHandler.cs" />
+    <Compile Include="Handlers\BanksHandlers\GetBankHandler.cs" />
+    <Compile Include="Handlers\BaseHandler.cs" />
+    <Compile Include="Handlers\BanksHandlers\AddBankHandler.cs" />
+    <Compile Include="Handlers\TransactionsHandlers\AddTransactionHandler.cs" />
+    <Compile Include="Handlers\TransactionsHandlers\GetBanksReceiversHandler.cs" />
+    <Compile Include="Handlers\TransactionsHandlers\GetTransactionsAverageHandler.cs" />
+    <Compile Include="Handlers\TransactionsHandlers\GetAllTransactionsHandler.cs" />
+    <Compile Include="Handlers\UsersHandlers\AddUserHandler.cs" />
+    <Compile Include="Handlers\UsersHandlers\DeleteUserHandler.cs" />
+    <Compile Include="Handlers\UsersHandlers\GetAllUsersHandler.cs" />
+    <Compile Include="Handlers\UsersHandlers\GetUserHandler.cs" />
+    <Compile Include="Handlers\UsersHandlers\UpdateUserHandler.cs" />
+    <Compile Include="Messages\TransactionMessages\AddTransactionRequest.cs" />
+    <Compile Include="Messages\TransactionMessages\AddTransactionResponse.cs" />
+    <Compile Include="Messages\TransactionMessages\GetBanksReceiversRequest.cs" />
+    <Compile Include="Messages\TransactionMessages\GetTransactionsAverageRequest.cs" />
+    <Compile Include="Messages\TransactionMessages\GetAllTransactionsRequest.cs" />
+    <Compile Include="Messages\TransactionMessages\GetBanksReceiversResponse.cs" />
+    <Compile Include="Messages\TransactionMessages\GetTransactionsAverageResponse.cs" />
+    <Compile Include="Messages\TransactionMessages\GetAllTransactionsResponse.cs" />
+    <Compile Include="Messages\UserMessages\AddUserRequest.cs" />
+    <Compile Include="Messages\UserMessages\AddUserResponse.cs" />
+    <Compile Include="Messages\UserMessages\DeleteUserRequest.cs" />
+    <Compile Include="Messages\UserMessages\DeleteUserResponse.cs" />
+    <Compile Include="Messages\UserMessages\GetAllUsersRequest.cs" />
+    <Compile Include="Messages\UserMessages\GetAllUsersResponse.cs" />
+    <Compile Include="Messages\UserMessages\GetUserRequest.cs" />
+    <Compile Include="Messages\UserMessages\GetUserResponse.cs" />
+    <Compile Include="Messages\UserMessages\UpdateUserRequest.cs" />
+    <Compile Include="Messages\UserMessages\UpdateUserResponse.cs" />
+    <Compile Include="Messages\BankMessages\DeleteBankRequest.cs" />
+    <Compile Include="Messages\BankMessages\DeleteBankResponse.cs" />
+    <Compile Include="Messages\BankMessages\UpdateBankRequest.cs" />
+    <Compile Include="Messages\BankMessages\UpdateBankResponse.cs" />
+    <Compile Include="Messages\BankMessages\GetAllBanksResponse.cs" />
+    <Compile Include="Messages\BankMessages\GetBankRequest.cs" />
+    <Compile Include="Messages\BankMessages\GetAllBanksRequest.cs" />
+    <Compile Include="Messages\BankMessages\GetBankResponse.cs" />
+    <Compile Include="Messages\BankMessages\AddBankResponse.cs" />
+    <Compile Include="Messages\BankMessages\AddBankRequest.cs" />
     <Compile Include="Migrations\201411172054140_2014.11.17.cs" />
     <Compile Include="Migrations\201411172054140_2014.11.17.Designer.cs">
       <DependentUpon>201411172054140_2014.11.17.cs</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\TransactionsRepository.cs" />
     <Compile Include="Repositories\UsersRepository.cs" />
     <Compile Include="Repositories\BanksRepository.cs" />
     <Compile Include="Migrations\201411121910110_BankDBMigration.cs" />
@@ -191,14 +247,9 @@
     <Compile Include="Models\UserGroupMappingToBank.cs" />
     <Compile Include="Models\UserGroupMappingToUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resume.cs" />
-    <Compile Include="Controllers\UsersController.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\BankDB.mdf" />
-    <Content Include="App_Data\BankDB_log.ldf">
-      <DependentUpon>BankDB.mdf</DependentUpon>
-    </Content>
+    <Content Include="App_Data\WebAPI.Models.BankContext.mdf" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -249,9 +300,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Handlers\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />

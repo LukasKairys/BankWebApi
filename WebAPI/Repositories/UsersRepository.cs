@@ -12,7 +12,7 @@ namespace WebAPI.Repositories
 {
     public interface IUsersRepository
     {
-        IEnumerable<User> GetAll();
+        List<User> GetAll();
         User Get(int id);
         void Delete(int id);
         void Update(User updatedBank);
@@ -28,12 +28,14 @@ namespace WebAPI.Repositories
             _connectionString = ConfigurationManager.ConnectionStrings["BankDB"].ConnectionString;
         }
 
-        public IEnumerable<User> GetAll()
+        public List<User> GetAll()
         {
             List<User> users = new List<User>();
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
+                conn.Open();
+
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = "SELECT [UserId], [Name], [BankId], [Balance] FROM [Users]";
@@ -68,6 +70,8 @@ namespace WebAPI.Repositories
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
+                conn.Open();
+
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText =
@@ -102,6 +106,8 @@ namespace WebAPI.Repositories
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
+                conn.Open();
+
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = "DELETE FROM [Users] WHERE [UserId] = @UserId";
@@ -116,10 +122,11 @@ namespace WebAPI.Repositories
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
+                conn.Open();
+
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "INSERT INTO [Users] ([UserId], [Name], [BankId], [Balance]) VALUES(@UserId, @Name, @BankId, @Balance)";
-                    cmd.Parameters.AddWithValue("@UserId", user.UserId);
+                    cmd.CommandText = "INSERT INTO [Users] ([Name], [BankId], [Balance]) VALUES(@Name, @BankId, @Balance)";
                     cmd.Parameters.AddWithValue("@Name", user.Name);
                     cmd.Parameters.AddWithValue("@BankId", user.BankId);
                     cmd.Parameters.AddWithValue("@Balance", user.Balance);
@@ -133,9 +140,12 @@ namespace WebAPI.Repositories
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
+                conn.Open();
+
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "INSERT INTO [Users] SET [Name] = @Name, [BankId] =  @BankId, [Balance] = @Balance))";
+                    cmd.CommandText = "UPDATE [Users] SET [Name] = @Name, [BankId] =  @BankId, [Balance] = @Balance WHERE [UserId] = @UserId";
+                    cmd.Parameters.AddWithValue("@UserId", updatedUser.UserId);
                     cmd.Parameters.AddWithValue("@Name", updatedUser.Name);
                     cmd.Parameters.AddWithValue("@BankId", updatedUser.BankId);
                     cmd.Parameters.AddWithValue("@Balance", updatedUser.Balance);

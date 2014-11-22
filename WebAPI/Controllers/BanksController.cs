@@ -9,6 +9,8 @@ using System.Net.Http;
 using System.Text;
 using System.Web.Http;
 using Newtonsoft.Json;
+using WebAPI.Handlers.BanksHandlers;
+using WebAPI.Messages.BankMessages;
 using WebAPI.Models;
 using WebAPI.Repositories;
 
@@ -17,52 +19,85 @@ namespace WebAPI.Controllers
     public class BanksController : ApiController
     {
 
-        private static BanksRepository _banksRepository;
-
-        public BanksController()
+        [HttpGet]
+        public HttpResponseMessage Get(int id)
         {
-            _banksRepository = new BanksRepository();
+            GetBankRequest getBankRequest = new GetBankRequest { BankId = id };
+
+            var handler = new GetBankHandler();
+
+            var response = handler.Handle(getBankRequest);
+
+            if (response != null)
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, response);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.InternalServerError);
         }
 
         [HttpGet]
         public HttpResponseMessage Get()
         {
-            var bankList = _banksRepository.GetAll();
+            GetAllBanksRequest getAllBanksRequest = new GetAllBanksRequest();
 
-            return Request.CreateResponse(HttpStatusCode.OK, bankList);
-        }
+            var handler = new GetAllBanksHandler();
 
-        [HttpGet]
-        public HttpResponseMessage Get(int id)
-        {
-            var bank = _banksRepository.Get(id);
+            var response = handler.Handle(getAllBanksRequest);
 
-            return Request.CreateResponse(HttpStatusCode.OK, bank);
+            if (response != null)
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, response);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.InternalServerError);
         }
 
         [HttpPost]
-        public HttpResponseMessage Post([FromBody]Bank bank)
+        public HttpResponseMessage Post([FromBody]AddBankRequest addBankRequest)
         {
-            _banksRepository.Insert(bank);
+            var handler = new AddBankHandler();
 
-            return Request.CreateResponse(HttpStatusCode.OK, "succes");
+            var response = handler.Handle(addBankRequest);
+
+            if (response != null)
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, response);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.InternalServerError);
+
         }
 
         [HttpPut]
-        public HttpResponseMessage Put([FromBody]Bank bank)
+        public HttpResponseMessage Put([FromBody]UpdateBankRequest updateBankRequest)
         {
-            _banksRepository.Update(bank);
+            var handler = new UpdateBankHandler();
 
-            return Request.CreateResponse(HttpStatusCode.OK, "succes");
+            var response = handler.Handle(updateBankRequest);
+
+            if (response != null)
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, response);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.InternalServerError);
         }
 
 
         [HttpDelete]
-        public HttpResponseMessage Delete(int id)
+        public HttpResponseMessage Delete(DeleteBankRequest deleteBankRequest)
         {
-            _banksRepository.Delete(id);
+            var handler = new DeleteBankHandler();
 
-            return Request.CreateResponse(HttpStatusCode.OK, "succes");
+            var response = handler.Handle(deleteBankRequest);
+
+            if (response != null)
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, response);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.InternalServerError);
         }
     }
 }
